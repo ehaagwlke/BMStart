@@ -38,10 +38,22 @@
     "APPSecTitle":{
     	"message":"Apps"
     },
-    "rClosed":{
+    "rclsdButtonTitle":{
     	"message":"Recently Closed"
     },
     "webStore":{
         "message":"Chrome Web Store"
+    },
+    "deleteBMIConfirm":{
+        "message":"You will delete the BookMark forever.\nAre you sure?"
+    },
+    "delBMIToolTip":{
+        "message":"Delete this bookmark item"
+    },
+    "deleteTopSiteConfirm":{
+        "message":"Remove this link from MostVisited?\nWill never show again."
+    },
+    "rclsdTitleStr":{
+        "message":"Recently Closed"
     }
 }

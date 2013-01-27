@@ -38,10 +38,19 @@
     "APPSecTitle":{
     	"message":"应用程序"
     },
-    "rClosed":{
-    	"message":"刚刚关闭"
+    "rclsdButtonTitle":{
+    	"message":"最近关闭"
     },
     "webStore":{
         "message":"应用商店"
+    },
+    "deleteBMIConfirm":{
+        "message":"确认从书签中删除此项？"
+    },
+    "delBMIToolTip":{
+        "message":"删除"
+    },
+    "deleteTopSiteConfirm":{
+        "message":"最常访问中不再显示此链接？"
     }
 }

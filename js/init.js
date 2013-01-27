@@ -1,8 +1,11 @@
 //mostvisited config
-mostvisited.containerId = 'topSitesLinks';
-mostvisited.titleContainerId = 'topSitesTitle';
-mostvisited.titleStr = chrome.i18n.getMessage('mostVisited');
-mostvisited.siteNodeTag = 'li';
+mostvisited.view.config = {
+    "containerId":"topSitesLinks",
+    "titleContainerId": "topSitesTitle",
+    "titleStr": chrome.i18n.getMessage("mostVisited"),
+    "siteNodeTag": "li",
+    "blackListKey": "mvBlackList"
+}
 
 //bookmarks config
 bms.view.config = {
@@ -42,5 +45,16 @@ extBMS.view.config = {
     "currViewLocalStorageId":"currViewId"
 };
 
+//recently closed tabs config
+rclsd.view.config = {
+    "rclsdButtonId":"rct",
+    "rclsdConTag":"UL",
+    "rclsdConId":"rclsdList",
+    "rclsdConClass":"rcls",
+    "rclsdItemTag":"LI",
+    "rclsdItemShowNum":30,
+    "rclsdItemStoreNum":50,
+    "rclsdTabsStoreID":"rclsdTabs"
+}
 //init the extension
 extBMS.init();

@@ -3,12 +3,12 @@
 	of this extension
 ======================*/
 
-extBMS = {};
-extBMS.view = {};
+var extBMS = {};
+    extBMS.view = {};
 
-extBMS.view.funcs = new Array();
-extBMS.view.funcs['bms'] = bms;
-extBMS.view.funcs['app'] = app;
+    extBMS.view.funcs = new Array();
+    extBMS.view.funcs['bms'] = bms;
+    extBMS.view.funcs['app'] = app;
 
 extBMS.view.shownSecId = {
     set:function(n){
@@ -31,6 +31,7 @@ extBMS.view.shownSecId = {
 extBMS.view.setTitles = function(){
     $$(extBMS.view.config.appSecID).textContent = chrome.i18n.getMessage('APPSecTitle');
     $$(extBMS.view.config.bmSecID).textContent = chrome.i18n.getMessage('BMSecTitle');
+    //$$(rclsd.view.config.rclsdButtonId).textContent = chrome.i18n.getMessage('rclsdButtonTitle');
 };
 
 extBMS.view.switcher = function(){    
@@ -49,11 +50,10 @@ extBMS.view.switcher = function(){
             //other items those have class 'at'
             //will get their class removed
             for(var j = 0; j<switcherItems.length; j++){
-                if(j != i && switcherItems[j].getAttribute("class") === "at"){ 
+                if(j != i && switcherItems[j].nodeType === 1 && switcherItems[j].getAttribute("class") === "at"){ 
                     switcherItems[j].removeAttribute('class');
                     var c = switcherItems[j].getAttribute('data-cid');
                     $$(c).style.display="none";
-                    $$(c).setAttribute('class','slideLeft');
                 }
             }
             
@@ -70,7 +70,6 @@ extBMS.view.switcher = function(){
                 }
                 co = $$(cid);
                 
-                co.setAttribute('class','slideLeft');
                 co.style.display="block";
                 
                 extBMS.view.shownSecId.set(this.id);

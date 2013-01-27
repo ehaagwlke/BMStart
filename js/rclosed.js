@@ -1,47 +1,62 @@
 var rclsd = {};
-	rclsd.data = {};
-	rclsd.view = {};
-	rclsd.view.config = {
-		"rclsdConTag":"UL",
-		"rclsdConId":"rclsdList",
-		"rclsdConClass":"rcls",
-		"rclsdItemTag":"LI",
-		"rclsdItemShowNum":15
-	}
-	
+    rclsd.data = {};
+    rclsd.view = {};
 
+rclsd.data.allOpendTabs = {};
 
-chrome.tabs.onCreated.addListener(function(tab){
-	var t = {};
-		t[tab.id] = {};
-		t[tab.id]['id'] = tab.id;
-		t[tab.id]['url'] = tab.url;
-		t[tab.id]['title'] = tab.title ? tab.title : tab.url,
-		aot = localStorage['allOpenedTabs'] ? localStorage['allOpenedTabs'] : 0;
-	
-	if(!aot){
-		localStorage['allOpenedTabs'] = JSON.stringify(t);
+rclsd.data.blackList = {
+    'chrome:' : 'chrome:', 
+    'about:' : 'about:'
+};
+
+rclsd.data.tabs = {
+    set: function(tab){
+        var key = rclsd.view.config.rclsdTabsStoreID,
+            ls = localStorage[key],
+            timeStamp = new Date().getTime(),
+            data = ls ? JSON.parse(ls) : {};
+
+        data[timeStamp] = tab;
+        localStorage[key] = JSON.stringify(data);
+    },
+    get: function(){
+        var key = rclsd.view.config.rclsdTabsStoreID,
+            ls = localStorage[key];
+        return JSON.parse(ls);
+    }
+}
+
+rclsd.data.store = function(tab){
+	var max = rclsd.view.config.rclsdItemStoreNum,
+		key = rclsd.view.config.rclsdTabsStoreID,
+		ls = localStorage[key],
+		l = ls ? JSON.parse(ls).length : 0;
+
+	if(!l || l+1 < max){
+		rclsd.data.tabs.set(tab);
 	}else{
-		var tt =  JSON.parse(localStorage['allOpenedTabs']);
-		tt[tab.id] = t[tab.id];
-		localStorage['allOpenedTabs'] = JSON.stringify(tt);
+		var data = JSON.parse(ls);
 	}
+}
+
+chrome.tabs.getAllInWindow(null, function(tabs){
+    for(var tab in tabs){
+        rclsd.data.allOpendTabs[tabs[tab].id] = tabs[tab];
+    }
 });
 
-chrome.tabs.onRemoved.addListener(function(id, info){
-	var tid = id,
-		tt = JSON.parse(localStorage['allOpenedTabs']),
-		t = {},
-		rct = localStorage['recentlyClosedTabs'] ? localStorage['recentlyClosedTabs'] : 0;
-	if(rct){
-		t = JSON.parse(rct);
-	}
-	
-	t[tid] = {};
-	t[tid] = tt.tid;
-	localStorage['recentlyClosedTabs'] = JSON.stringify(t);
-	
-	delete tt.tid;
-	localStorage['allOpenedTabs'] = JSON.stringify(tt);
+//console.log(rclsd.data.allOpendTabs);
+
+chrome.tabs.onUpdated.addListener(function(tid, info, tab){
+    if(info['status'] === 'complete'){
+        if(tab !== undefined){
+            rclsd.data.allOpendTabs[tab.id] = tab;
+        }
+    }
+});
+
+chrome.tabs.onRemoved.addListener(function(tid){
+	var tab = rclsd.data.allOpendTabs[tid];
+
 	
 });

@@ -24,3 +24,7 @@ base.ui.ce = function(e,a){
 	}
 	return t;
 }
+
+base.ui.cdf = function(){
+	return document.createDocumentFragment();
+}
