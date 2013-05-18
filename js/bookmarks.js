@@ -8,6 +8,62 @@ function log(msg){
     console.log(msg);
 };
 
+function editFolderTitle(id){
+    var einput,
+        ospan,
+        oftitle,
+        bmnId,
+        nftitle;
+
+    ospan = $$(id);
+    bmnId = ospan.getAttribute('data-fid');
+    oftitle = ospan.textContent;
+
+    einput = base.ui.ce('input',{
+        'value': oftitle
+    });
+
+    ospan.parentNode.insertBefore(einput, ospan.nextSibling);
+    ospan.style.display = 'none';
+    einput.focus();
+    einput.select();
+
+    function updateBMFTitle(){
+        if(einput.value.length > 0){
+            nftitle = einput.value;
+        }else{
+            nftitle = oftitle;
+        }
+        repaint();
+        chrome.bookmarks.update(bmnId, {
+            title: nftitle
+        }, function(bmt){
+            //do nothing now;
+        });
+    }
+
+    function repaint(){
+        //if the input we created still in the dom tree
+        //we should remove it.
+        if(einput.parentNode){
+            einput.parentNode.removeChild(einput);
+        }
+        ospan.removeAttribute('style');
+    }
+
+    einput.addEventListener('keydown', function(e){
+        if(e && (e.keyCode === 13 || e.keyCode === 27)){
+            updateBMFTitle();
+        }
+    }, false);
+
+    einput.addEventListener('blur', function(){
+        setTimeout(function(){
+            updateBMFTitle();
+        }, 50);
+    }, false);
+}
+
 bms.view.createBMFolder = function(n){    
 
     if(!n){
@@ -15,14 +71,46 @@ bms.view.createBMFolder = function(n){
         return;
     }
     
-    var fc = base.ui.ce(bms.view.config.folderTag,{id:n.id,'data-idx':n.index,'data-pidx':n.parentId, class:bms.view.config.folderTagClass}),
-        title = n.title ? n.title : chrome.i18n.getMessage("unnamedFolder"),
-        linkCountSpan = base.ui.ce('span'),
-        ft = base.ui.ce(bms.view.config.folderTitleTag,{textContent:title, id: n.id+'-fname'}),
-        bic = base.ui.ce(bms.view.config.bmItemContainerTag, {class:bms.view.config.bmItemContainerTagClass, id:n.id+'-list'});
-        
+    var fc,
+        title,
+        titleContainer,
+        linkCountSpan,
+        ft,
+        bic;
+
+    fc = base.ui.ce(bms.view.config.folderTag,{
+        id:n.id,
+        'data-idx':n.index,
+        'data-pidx':n.parentId, 
+        class:bms.view.config.folderTagClass
+    });
+    title = n.title ? n.title : chrome.i18n.getMessage("unnamedFolder");
+    titleContainer = base.ui.ce('span', {
+        textContent: title,
+        id: n.id+'-fname',
+        'data-fid': n.id,
+        'class': 'fname'
+    });
+    
+    //we can not modify the folder name
+    //of root bookmark folders.
+    if(n.id > 3){
+        titleContainer.addEventListener('dblclick', function(){
+            editFolderTitle(n.id+'-fname');
+        }, false);
+    }
+
+
+    linkCountSpan = base.ui.ce('span');
+    ft = base.ui.ce(bms.view.config.folderTitleTag);
+    bic = base.ui.ce(bms.view.config.bmItemContainerTag, {
+        class:bms.view.config.bmItemContainerTagClass, 
+        id:n.id+'-list'
+    });
+    
     linkCountSpan.textContent= '('+ (n.httpLinkCount ? n.httpLinkCount : 1) +')';
 
+    ft.appendChild(titleContainer);
     ft.appendChild(linkCountSpan);
     fc.appendChild(ft);
     fc.appendChild(bic);

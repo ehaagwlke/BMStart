@@ -22,6 +22,7 @@ html{background-image:url(/img/noise.png);-webkit-user-select:none;}
 .BMListCon{background-color:rgba(225,225,225,.35); border-radius:4px; display:inline-block; width:18em; overflow:hidden; margin:.4em;  white-space:nowrap;}
 .BMListCon h3{padding:.6em .4em; border-bottom:2px solid #CCC;margin:.2em .4em; height:2em; line-height:2em; overflow:hidden;font-size:1.2em; display: block;}
 .BMListCon h3 > span{color: #333;font-weight: normal; margin-left: .2em;}
+.BMListCon h3 > span.fname{font-weight: bold;}
 .BMListItem{list-style:none; vertical-align:middle;}
 .BMListItem li{overflow:hidden; vertical-align:middle;}
 .BMListItem li:hover{box-shadow:inset 0 0 1em #999; text-shadow:0 1px 0 white; color:#333; border-radius:2px;}
